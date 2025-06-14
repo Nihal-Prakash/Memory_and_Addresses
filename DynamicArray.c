@@ -105,71 +105,6 @@ void freeArray(DynamicArray *arr);
 
 
 /* =============================================================================
- * Function Definitions
- * =============================================================================
- */
-
-void initArray(DynamicArray *arr, size_t capacity) {
-    if (capacity == 0) {
-        capacity = 1;  // Ensure we always have space for at least one element
-    }
-    arr->data = malloc(sizeof(int) * capacity);
-    if (!arr->data) {
-        fprintf(stderr, "Error: malloc failed in initArray\n");
-        exit(EXIT_FAILURE);
-    }
-    arr->size = 0;
-    arr->capacity = capacity;
-}
-
-void insertArray(DynamicArray *arr, int value) {
-    // If we've filled up capacity, double the buffer size
-    if (arr->size == arr->capacity) {
-        size_t newCapacity = arr->capacity * 2;
-        int *tmp = realloc(arr->data, sizeof(int) * newCapacity);
-        if (!tmp) {
-            fprintf(stderr, "Error: realloc failed in insertArray\n");
-            exit(EXIT_FAILURE);
-        }
-        arr->data = tmp;
-        arr->capacity = newCapacity;
-    }
-
-    // Add the new value at the end
-    arr->data[arr->size] = value;
-    arr->size++;
-}
-
-int getAt(const DynamicArray *arr, size_t idx) {
-    // In production, check: idx < arr->size
-    return arr->data[idx];
-}
-
-void setAt(DynamicArray *arr, size_t idx, int value) {
-    // In production, check: idx < arr->size
-    arr->data[idx] = value;
-}
-
-void removeAt(DynamicArray *arr, size_t idx) {
-    // In production, check: idx < arr->size
-    // Shift all elements after idx one position to the left
-    for (size_t i = idx; i + 1 < arr->size; i++) {
-        arr->data[i] = arr->data[i + 1];
-    }
-    arr->size--;
-    // Optionally: shrink capacity if size is much smaller than capacity
-    // (Not implemented here, but you could halve capacity when size < capacity/4)
-}
-
-void freeArray(DynamicArray *arr) {
-    free(arr->data);
-    arr->data = NULL;
-    arr->size = 0;
-    arr->capacity = 0;
-}
-
-
-/* =============================================================================
  * Example Usage (main)
  * =============================================================================
  *
@@ -223,4 +158,64 @@ int main(void) {
            arr.size, arr.capacity);
 
     return 0;
+}
+
+
+/* =============================================================================
+ * Function Definitions
+ * =============================================================================
+ */
+
+void initArray(DynamicArray *arr, size_t capacity) {
+    if (capacity == 0) {
+        capacity = 1;  // Ensure we always have space for at least one element
+    }
+    arr->data = calloc(capacity, sizeof(int));
+    if (!arr->data) {
+        fprintf(stderr, "Error: calloc failed in initArray\n");
+        exit(EXIT_FAILURE);
+    }
+    arr->size = 0;
+    arr->capacity = capacity;
+}
+
+void insertArray(DynamicArray *arr, int value) {
+    // If we've filled up capacity, double the buffer size
+    if (arr->size == arr->capacity) {
+        size_t newCapacity = arr->capacity * 2;
+        arr->data = realloc(arr->data, sizeof(int) * newCapacity);
+        arr->capacity = newCapacity;
+    }
+
+    // Add the new value at the end
+    arr->data[arr->size] = value;
+    arr->size++;
+}
+
+int getAt(const DynamicArray *arr, size_t idx) {
+    // In production, check: idx < arr->size
+    return arr->data[idx];
+}
+
+void setAt(DynamicArray *arr, size_t idx, int value) {
+    // In production, check: idx < arr->size
+    arr->data[idx] = value;
+}
+
+void removeAt(DynamicArray *arr, size_t idx) {
+    // In production, check: idx < arr->size
+    // Shift all elements after idx one position to the left
+    for (size_t i = idx; i + 1 < arr->size; i++) {
+        arr->data[i] = arr->data[i + 1];
+    }
+    arr->size--;
+    // Optionally: shrink capacity if size is much smaller than capacity
+    // (Not implemented here, but you could halve capacity when size < capacity/4)
+}
+
+void freeArray(DynamicArray *arr) {
+    free(arr->data);
+    arr->data = NULL;
+    arr->size = 0;
+    arr->capacity = 0;
 }
