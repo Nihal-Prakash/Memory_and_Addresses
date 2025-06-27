@@ -707,8 +707,7 @@ while i &lt; 3*n {
 			i++; }</code></pre><p id="21715dbf-b6a2-80ea-9f60-e3924b9c7e2c" class="">
 </p></div></div></div></details><details open=""><summary style="font-weight:600;font-size:1.5em;line-height:1.3;margin:0"><mark class="highlight-purple_background">Dynamic Arrays</mark></summary><div class="indented"><p id="21215dbf-b6a2-8060-adf3-c2b302918e71" class="">An array can be thought of as a row of serialized boxes. We can put objects/data in those boxes and access them only by using the serial number.</p><p id="21e15dbf-b6a2-809e-9967-ca5c01a21d61" class="">We use malloc or calloc to allocate capacity to the array which works fine for static arrays but doesn’t work in case of dynamic arrays</p><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="21e15dbf-b6a2-809e-8b74-f205263b2d17"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%"><p id="21e15dbf-b6a2-800d-bfa6-d5a151b3b778" class="">Difference between malloc and calloc is that calloc does what malloc does and initializes all the pre-existing values to 0, to avoid avoid garbage value in case the array is called before being used.</p><p id="21e15dbf-b6a2-808b-9a78-d1fb93c73554" class="">
 </p><p id="21e15dbf-b6a2-8085-a858-dc0731e7e3ea" class="">There is also a slight difference in their syntax:<br/>👉 malloc(size)<br/>👉 calloc(n, size)<br/> <br/></p></div></figure><div id="21e15dbf-b6a2-8059-955e-e48bed09a05f" class="column-list"><div id="21e15dbf-b6a2-8068-a30c-de678adba51a" style="width:31.25%" class="column"><p id="21e15dbf-b6a2-80c6-a05e-deb950ef0920" class="">In higher level languages like Python the heap is managed by garbage collectors but in low level languages like C we need to manage it manually</p><p id="21e15dbf-b6a2-80fe-9b07-f9910da88f09" class="">Now let’s look at an implementation of Dynamic Arrays</p></div><div id="21e15dbf-b6a2-80af-b87c-d42d950d1232" style="width:68.75%" class="column"><figure id="21e15dbf-b6a2-80f5-b01a-e8e97d085bb3" class="image"><a href="image.png"><img style="width:672px" src="image.png"/></a></figure><p id="21e15dbf-b6a2-80ed-8f1a-dd124baca702" class="">
-</p></div></div><div id="21e15dbf-b6a2-80bd-9a75-c057277fddb0" class="column-list"><div id="21e15dbf-b6a2-80e2-bf11-dd4c526eeec3" style="width:43.75%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="21e15dbf-b6a2-801b-b274-fe3c1cf54b50" class="code"><code class="language-C">
-typedef struct {
+</p></div></div><div id="21e15dbf-b6a2-80bd-9a75-c057277fddb0" class="column-list"><div id="21e15dbf-b6a2-80e2-bf11-dd4c526eeec3" style="width:43.75%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="21e15dbf-b6a2-801b-b274-fe3c1cf54b50" class="code"><code class="language-C">typedef struct {
 
     int *data;         
     size_t size;       
@@ -716,10 +715,113 @@ typedef struct {
     
 } DynamicArray;
 </code></pre></div><div id="21e15dbf-b6a2-8064-92b9-fbc8d17156ef" style="width:56.25%" class="column"><p id="21e15dbf-b6a2-8096-b812-cfb71ca26ce6" class="">First of all let us create the Dynamic Array datatype/object</p><ul id="21e15dbf-b6a2-8096-88d7-f3b4b73c81fc" class="bulleted-list"><li style="list-style-type:disc"><code>int *data;</code> gives a pointer to the elements</li></ul><ul id="21e15dbf-b6a2-8000-8ef0-d8121367f4cb" class="bulleted-list"><li style="list-style-type:disc"><code>size_t size;</code> tells how many elements are currently stored</li></ul><ul id="21e15dbf-b6a2-80a6-b6b7-d3672fc2ecf9" class="bulleted-list"><li style="list-style-type:disc"><code>size_t capacity;</code> tells how many elements can be stored before needing resize</li></ul></div></div><p id="21e15dbf-b6a2-8042-a0f0-cc360df3cd87" class="">We want our Dynamic Array to have these basic functionalities:</p><ol type="1" id="21e15dbf-b6a2-801c-abfc-d2f62fd0232b" class="numbered-list" start="1"><li>Inserting elements</li></ol><ol type="1" id="21e15dbf-b6a2-809c-bf26-e224355dd7da" class="numbered-list" start="2"><li>Getting value at a particular index</li></ol><ol type="1" id="21e15dbf-b6a2-8093-8440-f6b17f33a478" class="numbered-list" start="3"><li>Setting the value at a particular index</li></ol><ol type="1" id="21e15dbf-b6a2-8047-83d5-d221693cf125" class="numbered-list" start="4"><li>Removing the value at a particular index </li></ol><p id="21e15dbf-b6a2-80fd-9d09-dc11f40849ca" class="">
-</p><p id="21e15dbf-b6a2-80b9-982d-fd2c00fd6bab" class="">So let’s go ahead and write out the function:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="21e15dbf-b6a2-80cc-b1d6-c2eda313e97a" class="code"><code class="language-C">//Function Declaration
+</p><p id="21e15dbf-b6a2-80b9-982d-fd2c00fd6bab" class="">So let’s go ahead and write out the function:</p></div></details><div id="21f15dbf-b6a2-80ae-b4df-da01b9c774c7" class="column-list"><div id="21f15dbf-b6a2-8086-ba2a-f9adf3afc496" style="width:43.75%" class="column"><p id="21f15dbf-b6a2-8000-a722-f0ff3b82b5eb" class="">We initialize the Dynamic Array using this function. </p><p id="21f15dbf-b6a2-807b-b098-c03b44f9e6f1" class="">If the user has specified a capacity of 0 we initialize it to 1 to always have space for atleast 1 element. This is also because we use a multiplicative function to expand the array’s capacity so we cannot have 0 as the capacity.</p><p id="21f15dbf-b6a2-80f0-926c-c67d3270eb78" class="">The <code>arr-&gt;data</code>  operator is just an alias for <code>(*arr).data</code> , we cannot write <code>*arr.data</code> because then it will return the pointer to the value of <code>arr.data</code> </p></div><div id="21f15dbf-b6a2-80f0-ad42-fade89862c4f" style="width:56.25%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="21f15dbf-b6a2-809b-9942-c548dbbe8469" class="code"><code class="language-C">void initArray(DynamicArray *arr, size_t capacity) {
+    if (capacity == 0) {
+        capacity = 1; 
+    }
+    arr-&gt;data = calloc(capacity, sizeof(int));
+    if (!arr-&gt;data) {
+        fprintf(stderr, &quot;Error: calloc failed in initArray\n&quot;);
+        exit(EXIT_FAILURE);
+    }
+    arr-&gt;size = 0;
+    arr-&gt;capacity = capacity;
+}</code></pre></div></div><div id="21f15dbf-b6a2-80e5-9f5d-ef4feb65d12d" class="column-list"><div id="21f15dbf-b6a2-8036-aa55-facc27b227d5" style="width:68.75%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="21f15dbf-b6a2-80a3-9cb6-ce4f5f92cac0" class="code"><code class="language-C">void insertArray(DynamicArray *arr, int value) {
+   if (arr-&gt;size == arr-&gt;capacity) {
+        size_t newCapacity = arr-&gt;capacity * 2;
+        arr-&gt;data = realloc(arr-&gt;data, sizeof(int) * newCapacity);
+        arr-&gt;capacity = newCapacity;
+    }
+
+    arr-&gt;data[arr-&gt;size] = value;
+    arr-&gt;size++;
+</code></pre></div><div id="21f15dbf-b6a2-80f6-9f26-ffed5240093e" style="width:31.250000000000007%" class="column"><p id="21f15dbf-b6a2-807c-a702-e5b6111ac72e" class="">We insert an element at the end of the array.</p><p id="21f15dbf-b6a2-8054-9846-e5778a4cf850" class="">First off we check whether or not we have enough capacity to accommodate the element - if it turns out that we dont have enough we double the capacity.</p><p id="21f15dbf-b6a2-8096-a45c-c74a09f038c9" class="">We then insert the value and increment the size counter.</p></div></div><p id="21f15dbf-b6a2-8091-aedf-d6e5cf7c2778" class="">The <code>getAt()</code> and<code>setAt()</code> functions are self explanatory so we will not spend any time on them. However <code>removeAt()</code>  is worthy of little discussion.</p><div id="21f15dbf-b6a2-8085-9d83-d4fcd82ad1d5" class="column-list"><div id="21f15dbf-b6a2-80cf-ba4e-c157f20bc80f" style="width:37.5%" class="column"><p id="21f15dbf-b6a2-80d4-89ad-f72f33af7337" class="">Whenever we  remove an element we need to shift all the following elements one place to the left. We initialize a counter i and set it = to the index of the element we want to remove and loop till we have shifted each element.</p></div><div id="21f15dbf-b6a2-80d6-9610-d39a4594dcf6" style="width:62.5%" class="column"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="21f15dbf-b6a2-80dc-9ce5-c76d87117be6" class="code"><code class="language-C">void removeAt(DynamicArray *arr, size_t idx) {
+    // In production, check: idx &lt; arr-&gt;size
+    // Shift all elements after idx one position to the left
+    for (size_t i = idx; i + 1 &lt; arr-&gt;size; i++) {
+        arr-&gt;data[i] = arr-&gt;data[i + 1];
+    }
+    arr-&gt;size--;
+    }</code></pre></div></div><p id="21f15dbf-b6a2-809b-8f33-c91ed5416acc" class="">The final code would be 👇</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="21f15dbf-b6a2-809a-8636-c70589d53a0a" class="code"><code class="language-C">/*
+ * dynamic_array.c
+ *
+ * A basic implementation of a dynamic array in C.
+ * Supports:
+ *   - Initialization
+ *   - Appending (push back)
+ *   - Getting/setting elements
+ *   - Removing an element at a given index
+ *   - Freeing the array’s memory
+ *
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;stdbool.h&gt;
+
+typedef struct {
+    int *data;         // Pointer to the elements
+    size_t size;       // How many elements are currently stored
+    size_t capacity;   // How many elements can be stored before needing resize
+} DynamicArray;
+
+//Funtion Prototypes
+
+void initArray(DynamicArray *arr, size_t capacity);
+void insertArray(DynamicArray *arr, int value);
+int getAt(const DynamicArray *arr, size_t idx);
+void setAt(DynamicArray *arr, size_t idx, int value);
+void removeAt(DynamicArray *arr, size_t idx);
+void freeArray(DynamicArray *arr);
+
+int main(void) {
+    DynamicArray arr;
+
+    // 1) Initialize with a small capacity (say, 2)
+    initArray(&amp;arr, 2);
+    printf(&quot;Initialized array with capacity = %zu\n&quot;, arr.capacity);
+
+    // 2) Append a few values
+    for (int i = 0; i &lt; 8; i++) {
+        insertArray(&amp;arr, i * 10);
+        printf(&quot;After inserting %d, size = %zu, capacity = %zu\n&quot;,
+               i * 10, arr.size, arr.capacity);
+    }
+
+    // 3) Print all elements
+    printf(&quot;\nCurrent elements:\n&quot;);
+    for (size_t i = 0; i &lt; arr.size; i++) {
+        printf(&quot;  arr[%zu] = %d\n&quot;, i, getAt(&amp;arr, i));
+    }
+
+    // 4) Modify an element
+    printf(&quot;\nSetting arr[3] = 1234\n&quot;);
+    setAt(&amp;arr, 3, 1234);
+    printf(&quot;  arr[3] is now %d\n&quot;, getAt(&amp;arr, 3));
+
+    // 5) Remove element at index 5
+    printf(&quot;\nRemoving element at index 5 (value = %d)\n&quot;, getAt(&amp;arr, 5));
+    removeAt(&amp;arr, 5);
+    printf(&quot;After removal, size = %zu, capacity = %zu\n&quot;, arr.size, arr.capacity);
+
+    // 6) Print elements again
+    printf(&quot;\nElements after removal:\n&quot;);
+    for (size_t i = 0; i &lt; arr.size; i++) {
+        printf(&quot;  arr[%zu] = %d\n&quot;, i, getAt(&amp;arr, i));
+    }
+
+    // 7) Clean up
+    freeArray(&amp;arr);
+    printf(&quot;\nArray freed. size = %zu, capacity = %zu\n&quot;,
+           arr.size, arr.capacity);
+
+    return 0;
+}
+
+//Function Declaration
 void initArray(DynamicArray *arr, size_t capacity) {
     if (capacity == 0) {
-        capacity = 1;  //Always have space for at least one element
+        capacity = 1;  // Ensure we always have space for at least one element
     }
     arr-&gt;data = calloc(capacity, sizeof(int));
     if (!arr-&gt;data) {
@@ -760,12 +862,15 @@ void removeAt(DynamicArray *arr, size_t idx) {
         arr-&gt;data[i] = arr-&gt;data[i + 1];
     }
     arr-&gt;size--;
-    }
+    // Optionally: shrink capacity if size is much smaller than capacity
+    // (Not implemented here, but you could halve capacity when size &lt; capacity/4)
+}
 
 void freeArray(DynamicArray *arr) {
     free(arr-&gt;data);
     arr-&gt;data = NULL;
     arr-&gt;size = 0;
     arr-&gt;capacity = 0;
-}</code></pre></div></details><p id="21e15dbf-b6a2-805b-ad4e-e19eec281a21" class="">
-</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
+}
+</code></pre><details open=""><summary style="font-weight:600;font-size:1.5em;line-height:1.3;margin:0">Linked List</summary><div class="indented"><p id="21e15dbf-b6a2-802c-b67b-e7f5b135f08b" class="">
+</p></div></details></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
