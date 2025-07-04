@@ -80,22 +80,6 @@ void initArray(DynamicArray *arr, size_t capacity) {
         capacity = 1;  // Ensure we always have space for at least one element
     }
     arr->data = calloc(capacity, sizeof(int));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     
     if (!arr->data) {
         fprintf(stderr, "Error: calloc failed in initArray\n");
